@@ -1,58 +1,61 @@
+#重點：
+#理想的function應該"只做一件事"，所以refactor(重構程式)的核心概念，就是把程式碼不斷的改寫，寫成越來越小的function，讓function "盡量"只做一件事。
+#程式最好有main() function 為程式的進入點
+
 import os  #operating system
 
-products = []
+def read_file(filename):
+    products = []
+    with open(filename, 'r', encoding='utf-8') as f:
+        for line in f:
+            if '商品,價格' in line or not line.strip():
+                continue #繼續
+            
+            parts = line.strip().split(',')
+            if len(parts) == 2:
+                # 只有當剛好分割成兩份時，才進行賦值和添加
+                name, price = parts
+                products.append([name, price])
+            else:
+                # 如果格式不對，就印出警告並跳過此行
+                print(f"警告：讀取到格式不符的資料，已略過此行 -> {line.strip()}")
 
-if os.path.isfile('products.csv'):
-	print('yeah! ˋ找到檔案了!')
-	with open('products.csv', 'r', encoding='utf-8') as f:
-		for line in f:
-			if '商品,價格' in line:
-				Continue #繼續, 跳到下一回; 相較於break, break 會跳出 loop 迴圈, Continue 不會 (所以Continue 通常只用在 For or IF 中很高的位置; 少見)
-			name, price = line.strip().split(',')
-			products.append([name, price])
-	print(products)
-
-else:
-	print('找不到檔案...')
-
-#讀取檔案
-# with --> 程式碼結束後會自動關閉檔案,避免被鎖住
-#products = []
-#with open('products.csv', 'r', encoding='utf-8') as f:
-#	for line in f:
-#		if '商品,價格' in line:
-#			Continue #繼續, 跳到下一回; 相較於break, break 會跳出 loop 迴圈, Continue 不會 (所以Continue 通常只用在 For or IF 中很高的位置; 少見)
-#		name, price = line.strip().split(',')
-#		products.append([name, price])
-#print(products)
-
+    return products
+    
 #讓使用者輸入
-# While loop 通常較適合運用在不知道執行次數的case 上
-while True:
-	name = input('請輸入商品名稱: ')
-	if name == 'q':
-		break
-	price = input('請輸入商品價格: ')
-
-	p = []  #創建"二維"list (小清單)
-	p.append(name)
-	p.append(price)
-	products.append(p) #小清單(小火車) 寫入大清單 (大火車)
-
-#Line 9 ~ 12 簡寫~
-#   products.append([name, price])
-
-print(products)
-
-#products[0][0]  #拿出 第0個商品 的第0個欄位 "名稱"
-#products[1][1]  #拿出 第1個商品 的"價格"
+def user_input(products):
+    while True:
+        name = input('請輸入商品名稱: ')
+        if name == 'q':
+            break
+        price = input('請輸入商品價格: ')
+        price = int(price)
+        products.append([name, price])
+    print(products)
+    return products
 
 #印出所有購買紀錄
-for p in products:
-	print(p[0], '的價格是', p[1])
+def print_product(products):
+    for p in products:
+        print(p[0], '的價格是', p[1])
 
 #寫入檔案
-with open('products.csv', 'w', encoding='utf-8') as f:
-	f.write('商品,價格\n')
-	for p in products:
-		f.write(p[0] + ',' + p[1] + '\n')
+def write_file(filename, products):
+    with open(filename, 'w', encoding='utf-8-sig') as f:
+        f.write('商品,價格\n')
+        for p in products:
+            f.write(p[0] + ',' + str(p[1]) + '\n')
+
+def main():
+    filename = 'products.csv'
+    if os.path.isfile(filename):
+        print('yeah! ˋ找到檔案了!')
+        products = read_file(filename)
+    else:
+        print('找不到檔案...')
+
+    products = user_input(products)
+    print_product(products)
+    write_file('products.csv',products)
+
+main()
