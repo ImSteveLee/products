@@ -16,5 +16,8 @@ while True:
 
 print(products)
 
-products[0][0]  #拿出 第0個商品 的第0個欄位 "名稱"
-products[1][1]  #拿出 第1個商品 的"價格"
+#products[0][0]  #拿出 第0個商品 的第0個欄位 "名稱"
+#products[1][1]  #拿出 第1個商品 的"價格"
+
+for product in products:
+	print(product[0], '的價格是', product[1])
