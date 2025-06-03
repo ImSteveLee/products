@@ -19,5 +19,10 @@ print(products)
 #products[0][0]  #拿出 第0個商品 的第0個欄位 "名稱"
 #products[1][1]  #拿出 第1個商品 的"價格"
 
-for product in products:
-	print(product[0], '的價格是', product[1])
+for p in products:
+	print(p[0], '的價格是', p[1])
+
+with open('products.csv', 'w', encoding='utf-8') as f:
+	f.write('商品,價格\n')
+	for p in products:
+		f.write(p[0] + ',' + p[1] + '\n')
